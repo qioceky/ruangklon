@@ -29,8 +29,10 @@ object HematManager {
     private const val PREFS = "ruangklon_hemat"
 
     private fun ctx(): Context? {
+        // BlackBoxCore.getContext() adalah method STATIS (bukan get().getContext()
+        // — itu yang membuat build v0.3.0 pertama gagal compile).
         return try {
-            BlackBoxCore.get().getContext()
+            BlackBoxCore.getContext()
         } catch (e: Exception) {
             Log.w(TAG, "BlackBoxCore context belum siap: ${e.message}")
             null
