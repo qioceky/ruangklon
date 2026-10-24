@@ -9,6 +9,7 @@
         android:background="@color/primary"
         app:title="@string/app_name"
         app:subtitleTextColor="@color/ink"
-        app:titleTextColor="@color/ink">
+        app:titleTextColor="@color/ink"
+        app:titleTextAppearance="@style/TextAppearance.RuangKlon.ToolbarTitle">
 
 </com.google.android.material.appbar.MaterialToolbar>

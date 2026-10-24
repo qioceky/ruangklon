@@ -108,3 +108,14 @@ diselesaikan di Setelan VPN (Forget / matikan Always-on aplikasi tersebut).
   menerima notifikasi sampai dibuka lagi — dialog peringatan
   menyampaikan ini sebelum mengaktifkan. Modul Xposed tidak bisa
   ditandai hemat. Data hemat dibersihkan saat clone di-uninstall.
+
+## Font v0.3.1 (Space Grotesk + JetBrains Mono)
+
+- Font dibundel di `res/font/` (bukan unduhan saat jalan): Space Grotesk
+  untuk teks utama & judul toolbar (tebal), JetBrains Mono untuk label
+  nama clone — sesuai token desain soft neobrutalism.
+- Kedua font berlisensi SIL Open Font License 1.1; teks lisensinya ada
+  di `fonts-licenses/`. File TTF statis (400/700) dibuat dari font
+  variabel resmi Google Fonts dengan fontTools instancer (bukan file
+  dari endpoint legacy Google yang ternyata bukan TTF valid).
+- v0.3.1 menimpa v0.3.0 (package & keystore sama, tidak perlu uninstall).
