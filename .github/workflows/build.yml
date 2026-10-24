@@ -16,7 +16,7 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Install SDK packages (BlackBox: compileSdk 35, NDK 29.0.13846066)
+      - name: "Install SDK packages (BlackBox compileSdk 35, NDK 29.0.13846066)"
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0" "ndk;29.0.13846066"
