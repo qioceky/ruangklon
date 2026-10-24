@@ -32,6 +32,23 @@ Hanya lewat GitHub Actions (`.github/workflows/build.yml`):
 `./gradlew :app:assembleDebug` di runner ubuntu-24.04.
 Build lokal di VM Muse tidak bisa (loopback JVM rusak — lihat AGENTS.md repo utama).
 
+## Perubahan RuangKlon v0.1.1 (patch VPN)
+
+Upstream `MainActivity` memanggil `checkVpnPermission()` tanpa syarat di
+setiap `onCreate`, sehingga aplikasi langsung terdaftar sebagai aplikasi VPN
+di sistem dan NordVPN menganggap slot VPN Android terisi — padahal mode
+jaringan VPN BlackBox bawaan NONAKTIF (`useVpnNetwork` default false,
+`ProxyVpnService` hanya jalan bila setting itu aktif).
+
+Patch: `MainActivity` hanya memanggil `checkVpnPermission()` bila
+`AppManager.mBlackBoxLoader.useVpnNetwork()` true, dan fungsi itu sendiri
+menolak bila mode tersebut nonaktif (pertahanan kedua, fail-closed ke
+"tidak minta izin"). Tidak ada pemanggil `VpnService.prepare` lain di
+kode aplikasi. Catatan: patch ini mencegah BlackBox versi baru muncul di
+daftar NordVPN; ia TIDAK memperbaiki NordVPN yang sudah diblokir oleh
+aplikasi VPN lain / Always-on di HP pengguna — itu tetap harus
+diselesaikan di Setelan VPN (Forget / matikan Always-on aplikasi tersebut).
+
 ## Batasan v0.1 yang diketahui
 
 - Build debug pertama memakai debug keystore bawaan runner (belum di-pin).

@@ -66,8 +66,19 @@ class MainActivity : LoadingActivity() {
             
             checkStoragePermission()
 
-            
-            checkVpnPermission()
+            // RuangKlon: JANGAN minta izin VPN di setiap buka aplikasi.
+            // Upstream memanggil checkVpnPermission() tanpa syarat, sehingga
+            // BlackBox langsung terdaftar sebagai aplikasi VPN di sistem dan
+            // NordVPN (serta VPN lain) menganggap slot VPN Android terisi,
+            // padahal mode jaringan VPN BlackBox bawaan NONAKTIF.
+            // Izin VPN hanya diminta bila pengguna mengaktifkan
+            // "Use VPN network" di Settings — di situlah ProxyVpnService
+            // benar-benar dibutuhkan. Default: tidak minta izin.
+            if (isVpnNetworkEnabled()) {
+                checkVpnPermission()
+            } else {
+                Log.d(TAG, "VPN network mode disabled, skipping VPN permission request")
+            }
 
             try {
                 BlackBoxCore.get().onAfterMainActivityOnCreate(this)
@@ -203,7 +214,22 @@ class MainActivity : LoadingActivity() {
             }
 
     
+    private fun isVpnNetworkEnabled(): Boolean {
+        return try {
+            AppManager.mBlackBoxLoader.useVpnNetwork()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking useVpnNetwork, defaulting to disabled: ${e.message}")
+            false
+        }
+    }
+
     private fun checkVpnPermission() {
+        // Pertahanan kedua: jangan pernah minta izin VPN bila mode jaringan
+        // VPN nonaktif, walau fungsi ini dipanggil dari tempat lain.
+        if (!isVpnNetworkEnabled()) {
+            Log.d(TAG, "VPN network mode disabled, refusing VPN permission request")
+            return
+        }
         try {
             val vpnIntent = VpnService.prepare(this)
             if (vpnIntent != null) {
