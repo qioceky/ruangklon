@@ -8,7 +8,7 @@
         android:theme="@style/ToolBarColorStyle"
         android:background="@color/primary"
         app:title="@string/app_name"
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white">
+        app:subtitleTextColor="@color/ink"
+        app:titleTextColor="@color/ink">
 
 </com.google.android.material.appbar.MaterialToolbar>

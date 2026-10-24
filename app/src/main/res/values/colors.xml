@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#3F3F3F</color>
-    <color name="primary_dark">#3F3F3F</color>
-    <color name="primary_light">#3F3F3F</color>
-    <color name="accent">#ffffff</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
+    <!-- RuangKlon: soft neobrutalism (kertas #FFFDF7, tinta #161616, kuning #FFD02E) -->
+    <color name="primary">#FFD02E</color>
+    <color name="primary_dark">#E0B90F</color>
+    <color name="primary_light">#FFE27A</color>
+    <color name="accent">#161616</color>
+    <color name="primary_text">#161616</color>
+    <color name="secondary_text">#5A5A5A</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="paper">#FFFDF7</color>
+    <color name="ink">#161616</color>
 </resources>

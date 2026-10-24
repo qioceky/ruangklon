@@ -432,16 +432,12 @@ class MainActivity : LoadingActivity() {
                     val intent =
                             Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("https://github.com/ALEX5402/NewBlackbox")
+                                    Uri.parse("https://github.com/qioceky/ruangklon")
                             )
                     startActivity(intent)
                 }
                 R.id.main_setting -> {
                     SettingActivity.start(this)
-                }
-                R.id.main_tg -> {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/newblackboxa"))
-                    startActivity(intent)
                 }
                 R.id.fake_location -> {
                     

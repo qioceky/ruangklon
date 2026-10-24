@@ -9,7 +9,7 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
     ndkVersion = "29.0.13846066"
     defaultConfig {
-        applicationId "top.niunaijun.blackbox"
+        applicationId "id.ruangklon"
         minSdk rootProject.ext.minSdk
         targetSdk rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -28,7 +28,25 @@ android {
         }
     }
 
+    signingConfigs {
+        // RuangKlon v0.2.0: keystore tetap (JKS) dari secret CI.
+        // Bila env RUANGKLON_STORE_FILE tidak ada, debug memakai
+        // signingConfigs.debug bawaan (CI gagal eksplisit bila secret kosong).
+        pinned {
+            storeFile file(System.getenv("RUANGKLON_STORE_FILE") ?: "/nonexistent/ruangklon-pinned.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+            storeType "jks"
+        }
+    }
+
     buildTypes {
+        debug {
+            if (System.getenv("RUANGKLON_STORE_FILE")) {
+                signingConfig signingConfigs.pinned
+            }
+        }
         release {
             signingConfig signingConfigs.debug
             minifyEnabled true
@@ -55,7 +73,7 @@ android {
     }
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
-            output.outputFileName = "BlackBox_${variant.versionName}_${output.baseName}.apk"
+            output.outputFileName = "RuangKlon_${variant.versionName}_${output.baseName}.apk"
         }
     }
 }

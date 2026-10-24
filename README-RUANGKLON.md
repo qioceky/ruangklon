@@ -57,3 +57,30 @@ diselesaikan di Setelan VPN (Forget / matikan Always-on aplikasi tersebut).
 - WhatsApp/Telegram terbaru bisa menolak berjalan di virtual env
   (deteksi virtualisasi / flag REQUIRE_SECURE_ENV). Ini tolok ukur go/no-go
   uji lapangan, bukan janji.
+
+## Rebrand RuangKlon v0.2.0 (jalur aman, atas perintah user 2026-10-24)
+
+- `applicationId` baru `id.ruangklon` (nama launcher: RuangKlon, versi
+  0.2.0 code 200). Paket kode internal (`top.niunaijun.*`) TIDAK diubah:
+  ia muncul di 570 file termasuk komponen manifest Bcore, taskAffinity,
+  dan jalur refleksi mesin virtual — rename total berisiko merusak mesin
+  clone dan baru ketahuan di lapangan. Atribusi Apache-2.0 ke upstream
+  tetap dipertahankan di README ini.
+- String utama diterjemahkan ke Bahasa Indonesia; tema soft neobrutalism
+  (kertas #FFFDF7, tinta #161616, kuning #FFD02E); ikon launcher baru
+  (motif dua jendela tumpang = clone); splash latar kertas.
+- Menu grup Telegram upstream DICABUT (tidak ada afiliasi); menu Kode
+  Sumber kini mengarah ke `github.com/qioceky/ruangklon`.
+- PRIVASI — temuan audit v0.2.0: upstream `ClientConfiguration`
+  mengembalikan chatId Telegram hardcoded dan `BlackBoxCore.sendLogs()`
+  mengunggah logcat + info perangkat ke API pihak ketiga (Vercel) saat
+  crash maupun lewat preferensi "Send Logs" di Pengaturan. Di RuangKlon
+  chatId dikosongkan (pengiriman langsung return, tanpa upload) dan
+  preferensi "Send Logs" dicabut dari Pengaturan.
+- Keystore tetap (JKS, alias androiddebugkey, berlaku s.d. 2056) dibuat
+  khusus RuangKlon; base64-nya disimpan sebagai secret repo
+  `RUANGKLON_KEYSTORE_BASE64`, dipulihkan CI sebelum build, dan sidik
+  jari signer dicetak di log build. Master keystore TIDAK ikut commit.
+- KONSEKUENSI: v0.2.0 adalah aplikasi baru di mata Android — uninstall
+  v0.1.1 dulu, dan clone lama harus ditambah ulang (data clone tidak
+  ikut pindah). Setelah v0.2.0, update berikutnya menimpa tanpa uninstall.
