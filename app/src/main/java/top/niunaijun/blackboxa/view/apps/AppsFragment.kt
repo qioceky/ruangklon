@@ -24,6 +24,7 @@ import top.niunaijun.blackboxa.databinding.FragmentAppsBinding
 import top.niunaijun.blackboxa.util.InjectionUtil
 import top.niunaijun.blackboxa.util.ShortcutUtil
 import top.niunaijun.blackboxa.util.inflate
+import top.niunaijun.blackboxa.util.HematManager
 import top.niunaijun.blackboxa.util.MemoryManager
 import top.niunaijun.blackboxa.util.toast
 import top.niunaijun.blackboxa.view.base.LoadingActivity
@@ -190,6 +191,7 @@ class AppsFragment : Fragment() {
             }
             
             viewModel.getInstalledAppsWithRetry(userID)
+            viewModel.sweepHemat(userID)
         } catch (e: Exception) {
             Log.e(TAG, "Error in onStart: ${e.message}")
         }
@@ -337,6 +339,9 @@ class AppsFragment : Fragment() {
                 try {
                     popupMenu = PopupMenu(requireContext(),view).also {
                         it.inflate(R.menu.app_menu)
+                        it.menu.findItem(R.id.app_hemat)?.title =
+                            if (HematManager.isEnabled(data.packageName, userID)) getString(R.string.hemat_disable)
+                            else getString(R.string.hemat_enable)
                         it.setOnMenuItemClickListener { item ->
                             try {
                                 when (item.itemId) {
@@ -359,6 +364,10 @@ class AppsFragment : Fragment() {
                                     R.id.app_shortcut -> {
                                         ShortcutUtil.createShortcut(requireContext(), userID, data)
                                     }
+
+                                    R.id.app_hemat -> {
+                                        toggleHemat(data)
+                                    }
                                 }
                                 return@setOnMenuItemClickListener true
                             } catch (e: Exception) {
@@ -377,6 +386,41 @@ class AppsFragment : Fragment() {
         }
     }
     
+    private fun toggleHemat(info: AppInfo) {
+        try {
+            if (info.isXpModule) {
+                toast(R.string.hemat_xp)
+                return
+            }
+            if (HematManager.isEnabled(info.packageName, userID)) {
+                HematManager.setEnabled(info.packageName, userID, false)
+                toast(getString(R.string.hemat_off, info.name))
+                return
+            }
+            MaterialDialog(requireContext()).show {
+                title(R.string.hemat_enable)
+                message(text = getString(R.string.hemat_hint))
+                positiveButton(R.string.done) {
+                    try {
+                        HematManager.setEnabled(info.packageName, userID, true)
+                        val last = HematManager.lastLaunch(info.packageName, userID)
+                        if (last > 0L && System.currentTimeMillis() - last >= HematManager.IDLE_TIMEOUT_MS) {
+                            BlackBoxCore.get().stopPackage(info.packageName, userID)
+                            toast(getString(R.string.is_stop, info.name))
+                        } else {
+                            toast(getString(R.string.hemat_on, info.name))
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error enabling hemat: ${e.message}")
+                    }
+                }
+                negativeButton(R.string.cancel)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error toggling hemat: ${e.message}")
+        }
+    }
+
     private fun initData() {
         try {
             viewBinding.stateView.showLoading()
@@ -419,6 +463,16 @@ class AppsFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error observing launch data: ${e.message}")
+                }
+            }
+
+            viewModel.hematLiveData.observe(viewLifecycleOwner) {
+                try {
+                    if (it != null && it > 0) {
+                        toast(getString(R.string.hemat_stopped, it))
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error observing hemat data: ${e.message}")
                 }
             }
 

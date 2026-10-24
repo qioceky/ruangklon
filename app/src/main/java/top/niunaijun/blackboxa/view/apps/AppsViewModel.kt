@@ -18,6 +18,8 @@ class AppsViewModel(private val repo: AppsRepository) : BaseViewModel() {
     
     val updateSortLiveData = MutableLiveData<Boolean>()
 
+    val hematLiveData = MutableLiveData<Int>()
+
     fun getInstalledApps(userId: Int) {
         launchOnUI {
             repo.getVmInstallList(userId, appsLiveData)
@@ -70,6 +72,12 @@ class AppsViewModel(private val repo: AppsRepository) : BaseViewModel() {
     fun launchApk(packageName: String, userID: Int) {
         launchOnUI {
             repo.launchApk(packageName, userID, launchLiveData)
+        }
+    }
+
+    fun sweepHemat(userID: Int) {
+        launchOnUI {
+            repo.sweepHemat(userID, hematLiveData)
         }
     }
 

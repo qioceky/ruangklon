@@ -84,3 +84,27 @@ diselesaikan di Setelan VPN (Forget / matikan Always-on aplikasi tersebut).
 - KONSEKUENSI: v0.2.0 adalah aplikasi baru di mata Android — uninstall
   v0.1.1 dulu, dan clone lama harus ditambah ulang (data clone tidak
   ikut pindah). Setelah v0.2.0, update berikutnya menimpa tanpa uninstall.
+
+## Mode hemat v0.3.0 (per clone, atas perintah user 2026-10-24)
+
+- Cara pakai: tahan lama (long-press) pada clone di daftar → "Aktifkan
+  mode hemat". Sekali aktif, clone itu dihentikan otomatis bila tidak
+  dibuka selama 30 menit. Menonaktifkan cukup lewat menu yang sama.
+- Mekanisme: `HematManager` (SharedPreferences `ruangklon_hemat`)
+  mencatat waktu terakhir clone diluncurkan (dari daftar RuangKlon
+  maupun dari pintasan Beranda) dan menandai clone yang hemat.
+  Setiap kali RuangKlon dibuka (`AppsFragment.onStart`), clone hemat
+  yang sudah menganggur >= 30 menit dihentikan lewat
+  `BlackBoxCore.stopPackage()` — API yang sama dengan tombol
+  "Hentikan" manual. Jumlah yang dihentikan dilaporkan lewat toast.
+- Keputusan desain (jujur): hemat TIDAK memakai timer/service latar,
+  karena service latar justru menguras baterai yang ingin dihemat —
+  evaluasi terjadi tiap RuangKlon dibuka. "Menganggur" dihitung dari
+  terakhir diluncurkan, bukan terakhir di-foreground (itu butuh izin
+  UsageStats yang sengaja tidak diminta). Clone yang dipasang sebelum
+  v0.3.0 tidak langsung dihentikan pada pembukaan pertama: pembukaan
+  itu dicatat sebagai baseline dulu.
+- Default: NONAKTIF per clone, karena clone yang dihentikan tidak
+  menerima notifikasi sampai dibuka lagi — dialog peringatan
+  menyampaikan ini sebelum mengaktifkan. Modul Xposed tidak bisa
+  ditandai hemat. Data hemat dibersihkan saat clone di-uninstall.

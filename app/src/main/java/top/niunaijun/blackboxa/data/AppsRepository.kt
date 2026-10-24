@@ -12,6 +12,7 @@ import top.niunaijun.blackboxa.R
 import top.niunaijun.blackboxa.app.AppManager
 import top.niunaijun.blackboxa.bean.AppInfo
 import top.niunaijun.blackboxa.bean.InstalledAppBean
+import top.niunaijun.blackboxa.util.HematManager
 import top.niunaijun.blackboxa.util.MemoryManager
 import top.niunaijun.blackboxa.util.getString
 
@@ -413,6 +414,7 @@ class AppsRepository {
     }
 
     fun unInstall(packageName: String, userID: Int, resultLiveData: MutableLiveData<String>) {
+        HematManager.clear(packageName, userID)
         try {
             BlackBoxCore.get().uninstallPackageAsUser(packageName, userID)
             updateAppSortList(userID, packageName, false)
@@ -427,10 +429,23 @@ class AppsRepository {
     fun launchApk(packageName: String, userId: Int, launchLiveData: MutableLiveData<Boolean>) {
         try {
             val result = BlackBoxCore.get().launchApk(packageName, userId)
+            if (result) {
+                HematManager.recordLaunch(packageName, userId)
+            }
             launchLiveData.postValue(result)
         } catch (e: Exception) {
             Log.e(TAG, "Error launching APK: ${e.message}")
             launchLiveData.postValue(false)
+        }
+    }
+
+    fun sweepHemat(userID: Int, hematLiveData: MutableLiveData<Int>) {
+        try {
+            val stopped = HematManager.sweep(userID)
+            hematLiveData.postValue(stopped.size)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sweeping hemat: ${e.message}")
+            hematLiveData.postValue(0)
         }
     }
 

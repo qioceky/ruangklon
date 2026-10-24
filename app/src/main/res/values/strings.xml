@@ -66,4 +66,11 @@
     <string name="disable_gms">Nonaktifkan Layanan</string>
     <string name="disable_gms_hint">Hapus lingkungan layanan Google saat ini? Data layanan Google akan dibersihkan.</string>
     <string name="no_gms">Saat ini belum ada lingkungan layanan Google di ponsel.</string>
+    <string name="hemat_enable">Aktifkan mode hemat</string>
+    <string name="hemat_disable">Nonaktifkan mode hemat</string>
+    <string name="hemat_hint">Clone ini akan dihentikan otomatis bila tidak dibuka selama 30 menit. Notifikasi dari clone bisa tertunda sampai clone dibuka lagi. Mode hemat dievaluasi setiap kali RuangKlon dibuka.</string>
+    <string name="hemat_on">Mode hemat aktif untuk %s</string>
+    <string name="hemat_off">Mode hemat nonaktif untuk %s</string>
+    <string name="hemat_stopped">Mode hemat menghentikan %d clone menganggur</string>
+    <string name="hemat_xp">Mode hemat hanya untuk aplikasi clone, bukan modul Xposed</string>
 </resources>
