@@ -119,3 +119,14 @@ diselesaikan di Setelan VPN (Forget / matikan Always-on aplikasi tersebut).
   variabel resmi Google Fonts dengan fontTools instancer (bukan file
   dari endpoint legacy Google yang ternyata bukan TTF valid).
 - v0.3.1 menimpa v0.3.0 (package & keystore sama, tidak perlu uninstall).
+
+## Perbaiki clone v0.4.0
+
+- Long-press sebuah clone → "Perbaiki clone": RuangKlon membandingkan
+  versionCode aplikasi host dengan versionCode clone.
+- Bila host lebih baru, clone diinstal ulang dari APK host yang sekarang
+  (jalur clone bawaan BlackBox, menimpa APK virtual tanpa menghapus data
+  clone). Bila sudah sama, tidak ada yang diubah; bila host tidak
+  terpasang atau clone lebih baru, diberi tahu jelas alasannya.
+- Modul Xposed dikecualikan dari Perbaiki, sama seperti mode hemat.
+- v0.4.0 menimpa v0.3.2 (package & keystore sama, tidak perlu uninstall).

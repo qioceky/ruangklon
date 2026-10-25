@@ -365,6 +365,10 @@ class AppsFragment : Fragment() {
                                         ShortcutUtil.createShortcut(requireContext(), userID, data)
                                     }
 
+                                    R.id.app_repair -> {
+                                        repairApk(data)
+                                    }
+
                                     R.id.app_hemat -> {
                                         toggleHemat(data)
                                     }
@@ -497,6 +501,31 @@ class AppsFragment : Fragment() {
             viewModel.launchLiveData.value = null
         } catch (e: Exception) {
             Log.e(TAG, "Error in onStop: ${e.message}")
+        }
+    }
+
+    private fun repairApk(info: AppInfo) {
+        try {
+            if (info.isXpModule) {
+                toast(R.string.repair_xp)
+                return
+            }
+            MaterialDialog(requireContext()).show {
+                title(R.string.repair_title)
+                message(text = getString(R.string.repair_hint, info.name))
+                positiveButton(R.string.done) {
+                    try {
+                        showLoading()
+                        viewModel.repair(info.packageName, userID)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error repairing app: ${e.message}")
+                        hideLoading()
+                    }
+                }
+                negativeButton(R.string.cancel)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error showing repair dialog: ${e.message}")
         }
     }
 

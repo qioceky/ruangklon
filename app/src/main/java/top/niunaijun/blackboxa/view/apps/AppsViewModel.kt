@@ -63,6 +63,12 @@ class AppsViewModel(private val repo: AppsRepository) : BaseViewModel() {
         }
     }
 
+    fun repair(packageName: String, userID: Int) {
+        launchOnUI {
+            repo.repairApk(packageName, userID, resultLiveData)
+        }
+    }
+
     fun clearApkData(packageName: String,userID: Int){
         launchOnUI {
             repo.clearApkData(packageName,userID,resultLiveData)

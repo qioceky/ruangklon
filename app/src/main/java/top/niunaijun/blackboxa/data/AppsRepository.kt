@@ -426,6 +426,58 @@ class AppsRepository {
         }
     }
 
+    /**
+     * Perbaiki clone: samakan clone dengan aplikasi host yang sekarang terpasang.
+     * - Bandingkan versionCode host vs versionCode clone.
+     * - Bila host lebih baru, instal ulang clone dari APK host (installPackageAsUser
+     *   menimpa APK virtual tanpa menghapus data clone, sama seperti update aplikasi).
+     * - Bila sama/lebih baru, tidak ada yang diubah; bila host tidak terpasang, gagal jelas.
+     */
+    fun repairApk(packageName: String, userID: Int, resultLiveData: MutableLiveData<String>) {
+        try {
+            val hostInfo = try {
+                BlackBoxCore.getPackageManager().getPackageInfo(packageName, 0)
+            } catch (e: Exception) {
+                null
+            }
+            if (hostInfo == null) {
+                resultLiveData.postValue(getString(R.string.repair_host_missing))
+                return
+            }
+            val cloneInfo = BlackBoxCore.get().getInstalledPackages(0, userID)
+                .firstOrNull { it.packageName == packageName }
+            if (cloneInfo == null) {
+                resultLiveData.postValue(getString(R.string.repair_clone_missing))
+                return
+            }
+            val hostVersion = hostInfo.versionCode
+            val cloneVersion = cloneInfo.versionCode
+            if (hostVersion == cloneVersion) {
+                resultLiveData.postValue(
+                    getString(R.string.repair_up_to_date, hostInfo.versionName ?: hostVersion.toString())
+                )
+                return
+            }
+            if (hostVersion < cloneVersion) {
+                resultLiveData.postValue(getString(R.string.repair_clone_newer))
+                return
+            }
+            val oldName = cloneInfo.versionName ?: cloneVersion.toString()
+            val installResult = BlackBoxCore.get().installPackageAsUser(packageName, userID)
+            if (installResult.success) {
+                scanUser()
+                resultLiveData.postValue(
+                    getString(R.string.repair_success, oldName, hostInfo.versionName ?: hostVersion.toString())
+                )
+            } else {
+                resultLiveData.postValue(getString(R.string.install_fail, installResult.msg))
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error repairing APK: ${e.message}")
+            resultLiveData.postValue("Repair failed: ${e.message}")
+        }
+    }
+
     fun launchApk(packageName: String, userId: Int, launchLiveData: MutableLiveData<Boolean>) {
         try {
             val result = BlackBoxCore.get().launchApk(packageName, userId)

@@ -68,6 +68,14 @@
     <string name="disable_gms_hint">Hapus lingkungan layanan Google saat ini? Data layanan Google akan dibersihkan.</string>
     <string name="no_gms">Saat ini belum ada lingkungan layanan Google di ponsel.</string>
     <string name="hemat_enable">Aktifkan mode hemat</string>
+    <string name="repair_title">Perbaiki clone</string>
+    <string name="repair_hint">Clone %s akan disamakan dengan aplikasi yang sekarang terpasang di HP (versi host). Data clone dipertahankan karena ini instal menimpa, bukan hapus lalu pasang ulang. Bila versinya sudah sama, tidak ada yang diubah.</string>
+    <string name="repair_host_missing">Aplikasi aslinya tidak terpasang di HP, jadi clone tidak bisa diperbaiki. Pasang dulu aplikasi aslinya, lalu coba lagi.</string>
+    <string name="repair_clone_missing">Clone tidak ditemukan. Tambahkan lagi clone-nya dari daftar aplikasi.</string>
+    <string name="repair_up_to_date">Clone sudah sama dengan aplikasi host (versi %s). Tidak ada yang diubah.</string>
+    <string name="repair_clone_newer">Versi clone lebih baru dari aplikasi host, jadi tidak diturunkan. Perbarui dulu aplikasi host-nya bila ingin menyamakan.</string>
+    <string name="repair_success">Clone diperbaiki: versi %1$s → %2$s. Data clone dipertahankan.</string>
+    <string name="repair_xp">Perbaiki hanya untuk aplikasi clone, bukan modul Xposed</string>
     <string name="hemat_disable">Nonaktifkan mode hemat</string>
     <string name="hemat_hint">Clone ini akan dihentikan otomatis bila tidak dibuka selama 30 menit. Notifikasi dari clone bisa tertunda sampai clone dibuka lagi. Mode hemat dievaluasi setiap kali RuangKlon dibuka.</string>
     <string name="hemat_on">Mode hemat aktif untuk %s</string>
