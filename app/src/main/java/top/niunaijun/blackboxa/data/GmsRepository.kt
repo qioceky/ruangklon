@@ -15,7 +15,22 @@ class GmsRepository {
     fun getGmsInstalledList(mInstalledLiveData: MutableLiveData<List<GmsBean>>) {
         val userList = arrayListOf<GmsBean>()
 
-        BlackBoxCore.get().users.forEach {
+        // Daftar pengguna virtual dimuat core secara asinkron; bila layar ini
+        // dibuka sebelum daftar siap, panggilan pertama bisa kosong. Tunggu
+        // sebentar dan coba lagi sebelum menyerahkan daftar kosong ke layar.
+        var users = BlackBoxCore.get().users
+        var attempts = 0
+        while (users.isEmpty() && attempts < 6) {
+            try {
+                Thread.sleep(500)
+            } catch (ignored: InterruptedException) {
+                break
+            }
+            users = BlackBoxCore.get().users
+            attempts++
+        }
+
+        users.forEach {
             val userId = it.id
             val userName =
                 AppManager.mRemarkSharedPreferences.getString("Remark$userId", "User $userId") ?: ""

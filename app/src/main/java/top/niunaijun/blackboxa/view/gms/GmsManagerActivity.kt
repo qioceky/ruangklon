@@ -29,9 +29,13 @@ class GmsManagerActivity : LoadingActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
         initToolbar(viewBinding.toolbarLayout.toolbar, R.string.gms_manager, true)
+        initRecyclerView()
         initViewModel()
 
-        initRecyclerView()
+        viewBinding.tvEmpty.setOnClickListener {
+            showLoading()
+            viewModel.getInstalledUser()
+        }
     }
 
     private fun initViewModel() {
@@ -41,6 +45,8 @@ class GmsManagerActivity : LoadingActivity() {
         viewModel.mInstalledLiveData.observe(this) {
             hideLoading()
             mAdapter.setItems(it)
+            viewBinding.tvEmpty.visibility =
+                if (it.isNullOrEmpty()) android.view.View.VISIBLE else android.view.View.GONE
         }
 
         viewModel.mUpdateInstalledLiveData.observe(this) { result ->
@@ -74,6 +80,16 @@ class GmsManagerActivity : LoadingActivity() {
         }
 
         viewModel.getInstalledUser()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Daftar pengguna bisa berubah / belum siap saat pertama dibuka:
+        // muat ulang tiap kali layar ini kembali terlihat.
+        if (this::mAdapter.isInitialized && mAdapter.getItems().isEmpty()) {
+            showLoading()
+            viewModel.getInstalledUser()
+        }
     }
 
     private fun initRecyclerView() {

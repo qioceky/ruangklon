@@ -60,6 +60,7 @@
     <string name="disable_flag_secure">Nonaktifkan Flag Secure</string>
     <string name="disable_flag_secure_summary">Izinkan tangkapan layar dan rekaman layar di aplikasi</string>
     <string name="gms_manager">Pengelola GMS</string>
+    <string name="gms_empty_hint">Belum ada pengguna virtual yang terbaca. Ketuk di sini untuk memuat ulang.</string>
     <string name="jump_gms">Buka Pengelola GMS</string>
     <string name="enable_gms">Aktifkan Layanan</string>
     <string name="enable_gms_hint">Membuka layanan Google dapat membuat YouTube dan aplikasi lain yang sangat bergantung pada layanan Google Play berjalan normal.</string>
